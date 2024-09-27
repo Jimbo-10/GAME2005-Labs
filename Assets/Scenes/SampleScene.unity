@@ -134,7 +134,6 @@ GameObject:
   - component: {fileID: 415048908}
   - component: {fileID: 415048907}
   - component: {fileID: 415048906}
-  - component: {fileID: 415048905}
   - component: {fileID: 415048909}
   m_Layer: 0
   m_Name: Sphere
@@ -143,19 +142,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &415048905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 415048904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efa1750ad4d409743a5b4ab5466faa7b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lineLength: 3
 --- !u!23 &415048906
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -230,14 +216,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 415048904}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 483f0b6cb297dce4cb3c962dd02aa5c7, type: 3}
+  m_Script: {fileID: 11500000, guid: ebe5a798b3a5fef44b56633c93d0630f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  X: 0
-  Y: 0
-  a: 5
-  b: 8
-  t: 0
+  vel: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
