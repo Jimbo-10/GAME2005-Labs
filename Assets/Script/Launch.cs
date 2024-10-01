@@ -8,34 +8,25 @@ public class Launch : MonoBehaviour
     public float launchSpeed = 20f;
     public float startHeight = 1.0f;
 
-    public float deltaTime = 0.02f;
-
-    public Vector3 velocity;
-    public Vector3 gravityAcceleration;
+    public GameObject projectileToCopy;
 
     void Update()
     {
+        Vector3 launchVelocity = new Vector3(Mathf.Cos(launchAngle * Mathf.PI / 180) * launchSpeed, Mathf.Sin(launchAngle * Mathf.PI / 180) * launchSpeed);
+        Vector3 startPosition = new Vector3(0.0f, startHeight, 0.0f);
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Debug.Log("Launch");
-            velocity = new Vector3(Mathf.Cos(launchAngle * Mathf.PI / 180) * launchSpeed, Mathf.Sin(launchAngle * Mathf.PI / 180) * launchSpeed);
-            transform.position = new Vector3(0.0f, startHeight, 0.0f);
-            gravityAcceleration = new Vector3(0.0f, -10.0f, 0.0f);
-            Debug.DrawLine(transform.position, velocity, Color.red, 2);
+            GameObject newObject = Instantiate(projectileToCopy);
+            FizziksObjekt fizziksObjekt = newObject.GetComponent<FizziksObjekt>();
+
+            fizziksObjekt.velocity = launchVelocity;
+
+            fizziksObjekt.transform.position = startPosition;
         }
 
-    }
-
-    private void FixedUpdate()
-    {
-
-        transform.position = transform.position + velocity * deltaTime;
-
-        velocity = velocity + gravityAcceleration * deltaTime;
-
-        Debug.DrawLine(transform.position, transform.position + velocity, Color.green);
+        Debug.DrawLine(startPosition, startPosition + launchVelocity, Color.red);
 
     }
-
 }
