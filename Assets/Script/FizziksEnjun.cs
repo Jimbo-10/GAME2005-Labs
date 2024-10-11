@@ -42,5 +42,42 @@ public class FizziksEnjun : MonoBehaviour
             Debug.DrawLine(objektA.transform.position, objektA.transform.position + objektA.velocity, Color.red);
         }
         
+        foreach(FizziksObjekt objekt in objekts)
+        {
+            objekt.GetComponent<Renderer>().material.color = Color.white;
+        }
+
+        for(int iA = 0; iA < objekts.Count; iA++)
+        {
+            FizziksObjekt objektA = objekts[iA];
+
+            for(int iB = iA + 1; iB < objekts.Count; iB++)
+            {
+                FizziksObjekt objektB = objekts[iB];
+
+                if (objektA == objektB) continue;
+
+                if (IsOverlappingSpheres(objektA, objektB))
+                {
+                    Debug.DrawLine(objektA.transform.position, objektB.transform.position, Color.red);
+
+                    objektA.GetComponent<Renderer>().material.color = Color.red;
+                    objektB.GetComponent<Renderer>().material.color = Color.red;
+                }
+                else
+                {
+                    // no collision
+                }
+            }
+        }
     }
+    public bool IsOverlappingSpheres(FizziksObjekt objektA, FizziksObjekt objektB)
+    {
+        Debug.Log("Checking collision between: " + objektA.name + " and " + objektB.name);
+        Vector3 Displacement = objektA.transform.position - objektB.transform.position;
+        float distance = Displacement.magnitude;
+
+        return distance < objektA.radius + objektB.radius;
+    }
+
 }
