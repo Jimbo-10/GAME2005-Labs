@@ -28,10 +28,15 @@ public class FizziksEnjun : MonoBehaviour
             Vector3 prevPos = objektA.transform.position;
             Vector3 newPos = objektA.transform.position + objektA.velocity * dt;
            
-
             objektA.transform.position = newPos;
 
-            objektA.velocity += gravityAcceleration * dt;
+            Vector3 accelerationThisFrame = gravityAcceleration * objektA.gravityScale;
+            Vector3 vSquared = objektA.velocity.normalized * objektA.velocity.sqrMagnitude;
+            Vector3 dragAcceleration = -objektA.drag * vSquared;
+
+            accelerationThisFrame += dragAcceleration;
+
+            objektA.velocity += accelerationThisFrame * dt;
 
             // drag
             dragF = -objektA.drag * objektA.velocity;
@@ -57,16 +62,42 @@ public class FizziksEnjun : MonoBehaviour
 
                 if (objektA == objektB) continue;
 
-                if (IsOverlappingSpheres(objektA, objektB))
+                bool isOverlapping = false;
+
+                if (objektA.shape.GetShape() == FizziksShape.Shape.Sphere &&
+                   objektB.shape.GetShape() == FizziksShape.Shape.Sphere)
+                {
+                    isOverlapping = IsOverlappingSpheres(objektA, objektB);
+                   
+                }
+                else if (objektA.shape.GetShape() == FizziksShape.Shape.Sphere &&
+                        objektB.shape.GetShape() == FizziksShape.Shape.Plane)
+                {
+                    isOverlapping = IsOverlappingSpherePlane((FizziksShapeSphere)objektA.shape, (FizziksShapePlane)objektB.shape);
+                }
+                else if (objektA.shape.GetShape() == FizziksShape.Shape.Plane &&
+                        objektB.shape.GetShape() == FizziksShape.Shape.Sphere)
+                {
+                    isOverlapping = IsOverlappingSpherePlane((FizziksShapeSphere)objektB.shape, (FizziksShapePlane)objektA.shape);
+                }
+
+                else if (objektA.shape.GetShape() == FizziksShape.Shape.Sphere &&
+                        objektB.shape.GetShape() == FizziksShape.Shape.Halfspace)
+                {
+                    isOverlapping = IsOverlappingSphereHalfspace((FizziksShapeSphere)objektA.shape, (FizziksShapeHalfSpace)objektB.shape);
+                }
+                else if (objektA.shape.GetShape() == FizziksShape.Shape.Halfspace &&
+                        objektB.shape.GetShape() == FizziksShape.Shape.Sphere)
+                {
+                    isOverlapping = IsOverlappingSphereHalfspace((FizziksShapeSphere)objektB.shape, (FizziksShapeHalfSpace)objektA.shape);
+                }
+
+                if (isOverlapping)
                 {
                     Debug.DrawLine(objektA.transform.position, objektB.transform.position, Color.red);
 
                     objektA.GetComponent<Renderer>().material.color = Color.red;
                     objektB.GetComponent<Renderer>().material.color = Color.red;
-                }
-                else
-                {
-                    // no collision
                 }
             }
         }
@@ -77,7 +108,29 @@ public class FizziksEnjun : MonoBehaviour
         Vector3 Displacement = objektA.transform.position - objektB.transform.position;
         float distance = Displacement.magnitude;
 
-        return distance < objektA.radius + objektB.radius;
+        float radiusA = ((FizziksShapeSphere)objektA.shape).radius;
+        float radiusB = ((FizziksShapeSphere)objektA.shape).radius;
+
+
+        return distance < radiusA + radiusB;
+    }
+
+    public bool IsOverlappingSpherePlane(FizziksShapeSphere sphere, FizziksShapePlane plane)
+    {
+        Vector3 planeToSphere = sphere.transform.position - plane.transform.position;
+        float positionAlongNormal = Vector3.Dot(planeToSphere, plane.Normal());
+        float distanceToPlane = Mathf.Abs(positionAlongNormal);
+        return distanceToPlane < sphere.radius;
+    }
+
+    public bool IsOverlappingSphereHalfspace(FizziksShapeSphere sphere, FizziksShapeHalfSpace halfspace)
+    {
+        Vector3 halfSpaceToSphere = sphere.transform.position - halfspace.transform.position;
+        float positionAlongNormal = Vector3.Dot(halfSpaceToSphere, halfspace.Normal());
+        float distanceToHalfSpace = Mathf.Abs(positionAlongNormal);
+
+        return  positionAlongNormal <= 0;
+
     }
 
 }
