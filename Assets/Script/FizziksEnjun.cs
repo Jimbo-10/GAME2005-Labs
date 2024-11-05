@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -67,7 +68,7 @@ public class FizziksEnjun : MonoBehaviour
                 if (objektA.shape.GetShape() == FizziksShape.Shape.Sphere &&
                    objektB.shape.GetShape() == FizziksShape.Shape.Sphere)
                 {
-                    isOverlapping = IsOverlappingSpheres(objektA, objektB);
+                    isOverlapping = IsCollideSpheres(objektA, objektB);
                    
                 }
                 else if (objektA.shape.GetShape() == FizziksShape.Shape.Sphere &&
@@ -102,6 +103,30 @@ public class FizziksEnjun : MonoBehaviour
             }
         }
     }
+    public bool IsCollideSpheres(FizziksObjekt sphereA, FizziksObjekt sphereB)
+    {
+       
+        Vector3 Displacement = sphereA.transform.position - sphereB.transform.position;
+        float distance = Displacement.magnitude;
+
+        float radiusA = ((FizziksShapeSphere)sphereA.shape).radius;
+        float radiusB = ((FizziksShapeSphere)sphereB.shape).radius;
+
+        float overlap = (radiusA + radiusB) - distance;
+
+        if (overlap > 0.0f)
+        {
+            Vector3 collisionNormal_BtoA = (Displacement / distance);
+            Vector3 mtv = collisionNormal_BtoA * overlap;
+
+            sphereA.transform.position += mtv * 0.5f;
+            sphereB.transform.position -= mtv * 0.5f;
+            return true;
+        }
+        else
+            return false;
+    }
+
     public bool IsOverlappingSpheres(FizziksObjekt objektA, FizziksObjekt objektB)
     {
         Debug.Log("Checking collision between: " + objektA.name + " and " + objektB.name);
@@ -120,7 +145,20 @@ public class FizziksEnjun : MonoBehaviour
         Vector3 planeToSphere = sphere.transform.position - plane.transform.position;
         float positionAlongNormal = Vector3.Dot(planeToSphere, plane.Normal());
         float distanceToPlane = Mathf.Abs(positionAlongNormal);
-        return distanceToPlane < sphere.radius;
+        float overlap = sphere.radius - positionAlongNormal;
+
+        if(overlap > 0)
+        {
+           // Vector3 collisionNormal = planeToSphere / positionAlongNormal;
+            Vector3 mtv = plane.Normal() * overlap;
+            sphere.transform.position += mtv * 0.5f;
+            plane.transform.position -= mtv * 0.5f;
+
+            return true;
+        }
+        else
+
+        return false;
     }
 
     public bool IsOverlappingSphereHalfspace(FizziksShapeSphere sphere, FizziksShapeHalfSpace halfspace)
@@ -129,7 +167,20 @@ public class FizziksEnjun : MonoBehaviour
         float positionAlongNormal = Vector3.Dot(halfSpaceToSphere, halfspace.Normal());
         float distanceToHalfSpace = Mathf.Abs(positionAlongNormal);
 
-        return  positionAlongNormal <= 0;
+        float overlap = sphere.radius - distanceToHalfSpace;
+
+        if(overlap > 0)
+        {
+           // Vector3 collisionNormal = planeToSphere/distanceToPlane;
+            Vector3 mtv = halfspace.Normal() * overlap;
+            sphere.transform.position += mtv * 0.5f;
+            halfspace.transform.position -= mtv * 0.5f;
+
+            return true;
+        }
+        else
+
+        return false;
 
     }
 

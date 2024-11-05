@@ -158,7 +158,7 @@ MonoBehaviour:
   shape: {fileID: 0}
   mass: 1
   drag: 0.1
-  gravityScale: 1
+  gravityScale: 0
   velocity: {x: 0, y: 0, z: 0}
 --- !u!23 &408500629
 MeshRenderer:
@@ -249,6 +249,7 @@ GameObject:
   - component: {fileID: 415048908}
   - component: {fileID: 415048907}
   - component: {fileID: 415048906}
+  - component: {fileID: 415048911}
   - component: {fileID: 415048909}
   - component: {fileID: 415048910}
   m_Layer: 0
@@ -352,6 +353,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 1
+--- !u!114 &415048911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415048904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abbf9af3c8ff60a44a73a49a510223bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shape: {fileID: 0}
+  mass: 1
+  drag: 2.1
+  gravityScale: 0
+  velocity: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
